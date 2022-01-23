@@ -1,3 +1,12 @@
+### Solutions
+
+Credits to [@OpenZeppelin/](https://github.com/OpenZeppelin/) for these exciting challenges which teach a lot about smart contract security.
+
+Click [here](SOLUTIONS.md) to view my solutions.
+
+---
+
+
 # Ethernaut
 
 <p>Ethernaut is a Web3/Solidity based wargame inspired in <a href="https://overthewire.org" target="_blank" rel="noopener noreferrer">overthewire.org</a>, to be played in the Ethereum Virtual Machine. Each level is a smart contract that needs to be 'hacked'.</p>
