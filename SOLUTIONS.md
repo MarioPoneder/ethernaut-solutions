@@ -18,6 +18,6 @@ await contract.collectAllocations();
 
 ## 3. Coin Flip
 
-```
-
-```
+Compile [CoinFlipAttack.sol](./solutions/CoinFlipAttack.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
+Do not forget to specify the level `instance` address when deploying the attacker contract (constructor).  
+Afterwards, just call the `callFlipWithCorrectGuess()` 10 times.
