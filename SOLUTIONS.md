@@ -38,13 +38,13 @@ await contract.transfer(level /* can be any address except own */, balance + 1 /
 
 ## 6. Delegation
 
-See [Delegatecall](https://solidity-by-example.org/delegatecall/).
+See solidity function [delegatecall](https://solidity-by-example.org/delegatecall/).
 ```
 await contract.sendTransaction({ data: web3.eth.abi.encodeFunctionSignature("pwn()") });
 ```
 
 ## 7. Force
 
-```
-
-```
+See solidity function [selfdestruct](https://solidity-by-example.org/hacks/self-destruct/).  
+Compile [ForcePay.sol](./solutions/ForcePay.sol) and deploy it to the Rinkeby testnet with at least 0.001 ETH.
+Afterwards, just call the `destroyAndLeaveBalanceAt(address _contract)` function with the level `instance` address as first argument.
