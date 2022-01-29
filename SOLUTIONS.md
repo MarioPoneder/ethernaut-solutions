@@ -55,3 +55,8 @@ Afterwards, just call the `destroyAndLeaveBalanceAt(address _contract)` function
 const password = await web3.eth.getStorageAt(instance, 1); // get storage variable at index 1 of contract (although it's private!)
 await contract.unlock(password);
 ```
+
+## 9. King
+
+Compile [King4Ever.sol](./solutions/King4Ever.sol) and deploy it to the Rinkeby testnet with at least 0.001 ETH and the level `instance` address as argument (constructor).
+The fallback function of this contract is going to revert any subsequent transaction which is trying to claim the throne.
