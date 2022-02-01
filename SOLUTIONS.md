@@ -80,3 +80,7 @@ const data2_16 = data2_32.substring(0, data2_32.length - 32); // remove last 16 
 await contract.unlock(data2_16);
 ```
 
+## 13. Gatekeeper One
+
+See [Solidity - Conversions](https://www.tutorialspoint.com/solidity/solidity_conversions.htm).  
+Compile [GatebreakerOne.sol](./solutions/GatebreakerOne.sol) and deploy it to the Rinkeby testnet with the level `instance` address as argument (constructor). Done!
