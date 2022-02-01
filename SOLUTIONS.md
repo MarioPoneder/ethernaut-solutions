@@ -66,3 +66,8 @@ The fallback function of this contract is going to revert any subsequent transac
 Compile [ReentranceAttack.sol](./solutions/ReentranceAttack.sol) and deploy it to the Rinkeby testnet with e.g. 0.0001 ETH and the level `instance` address as argument (constructor).
 Afterwards, just call the `drainVictim()` function to steal all funds from the level contract. Once this is done, do not forget to call the `withdraw()` function to get the funds back to your wallet.
 
+## 11. Elevator
+
+Compile [Building.sol](./solutions/Building.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
+Afterwards, just call the `goToTop(address _elevatorContract)` function with the level `instance` address as first argument.
+
