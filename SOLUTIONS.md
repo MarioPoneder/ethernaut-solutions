@@ -84,3 +84,10 @@ await contract.unlock(data2_16);
 
 See [Solidity - Conversions](https://www.tutorialspoint.com/solidity/solidity_conversions.htm).  
 Compile [GatebreakerOne.sol](./solutions/GatebreakerOne.sol) and deploy it to the Rinkeby testnet with the level `instance` address as argument (constructor). Done!
+
+## 14. Gatekeeper Two
+
+See [Bypass Contract Size Check](https://solidity-by-example.org/hacks/contract-size/).  
+Compile [GatebreakerTwo.sol](./solutions/GatebreakerTwo.sol) and deploy it to the Rinkeby testnet with the level `instance` address as argument (constructor). Done!
+
+
