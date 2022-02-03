@@ -101,3 +101,10 @@ await contract.approve(player, playerBalance); // approve self to transfer token
 const tokenReceiver = web3.eth.accounts.create(); // create new account to receive tokens
 await contract.transferFrom(player, tokenReceiver.address, playerBalance); // transfer tokens to new account
 ```
+
+## 16. Preservation
+
+See solidity function [delegatecall](https://solidity-by-example.org/delegatecall/).  
+Compile [MadLibraryContract.sol.sol](./solutions/MadLibraryContract.sol.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
+Afterwards, just call the `attack1(address _preservationContract)` and `attack2(address _preservationContract)` functions with the level `instance` address as first argument.
+
