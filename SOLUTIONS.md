@@ -133,3 +133,43 @@ const destroyParam = web3.eth.abi.encodeParameter("address", player);
 const destroyData = destroySig + destroyParam.slice(2); // slice '0x' before concatenating hex strings
 await web3.eth.sendTransaction({ from: player, to: contractAddress, data: destroyData });
 ```
+
+## 18. MagicNumber
+
+See [How to deploy contracts using raw assembly opcodes](https://medium.com/coinmonks/ethernaut-lvl-19-magicnumber-walkthrough-how-to-deploy-contracts-using-raw-assembly-opcodes-c50edb0f71a2) for an in-depth walk-through.
+
+Contract bytecode / opcodes (see [Ethereum Virtual Machine Opcodes](https://www.ethervm.io/)):
+```
+// --- INITIALIZATION / CONTACT CREATION CODE ---
+// codecopy(t=0x00, f=0x0C, s=0x0A) ... copy runtime code to memory
+60 0A   // push1 0x0A (size of runtime code)
+60 0C   // push1 0x0C (offset of runtime code = size of init code)
+60 00   // push1 0x00 (destination memory location)
+39      // codecopy
+
+// return(p=0x00, s=0x0A) ... return data at memory location 0x00 with size 0x0A bytes
+                              [return runtime code to EVM]
+60 0A   // push1 0x0A
+60 00   // push1 0x00
+F3      // return
+
+
+// --- RUNTIME CODE ---
+// mstore(p=0x00, v=0x2A) ... store byte 0x2A (42) at memory location 0x00
+60 2A   // push1 0x2A
+60 00   // push1 0x00
+52      // mstore
+
+// return(p=0x00, s=0x20) ... return data at memory location 0x00 with size 0x20 (32) bytes
+                              [return uint256(42) to caller]
+60 20   // push1 0x20
+60 00   // push1 0x00
+F3      // return
+```
+
+Web3 code:
+```
+const contractBytes = "0x600A600C600039600A6000F3602A60005260206000F3";
+const solverContract = await web3.eth.sendTransaction({ from: player, data: contractBytes });
+await contract.setSolver(solverContract.contractAddress);
+```
