@@ -107,6 +107,7 @@ await contract.transferFrom(player, tokenReceiver.address, playerBalance); // tr
 See solidity function [delegatecall](https://solidity-by-example.org/delegatecall/).  
 Compile [MadLibraryContract.sol](./solutions/MadLibraryContract.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
 Afterwards, just call the `attack1(address _preservationContract)` and `attack2(address _preservationContract)` functions with the level `instance` address as first argument.
+Note that the attack needed to be split into two distinct transactions due to [cached storage reads](https://github.com/ethereum/solidity/issues/3118) in Solidity.
 
 
 ## 17. Recovery
