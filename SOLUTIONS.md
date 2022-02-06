@@ -199,3 +199,9 @@ const storage0_new_content = "0x000000000000000000000001" + player.slice(2); // 
 
 await contract.revise(storage0_relative_to_codex, storage0_new_content); // replace contract owner with player
 ```
+
+## 20. Denial
+
+See [Difference between require and assert and the difference between revert and throw](https://ethereum.stackexchange.com/questions/15166/difference-between-require-and-assert-and-the-difference-between-revert-and-thro).  
+Compile [Deny.sol](./solutions/Deny.sol) and deploy it to the Rinkeby testnet with the level `instance` address as argument (constructor). Done!
+
