@@ -184,13 +184,13 @@ await contract.retract(); // use underflow to make all 2^256 storage slots acces
 
 /* Storage slot layout:
     0: owner (address), contact (bool)
-	1: codex.length (uint256)
-	.
-	.
-	.
-	keccak256(1): codex[0] (bytes32)
-	.
-	keccak256(1)+i: codex[i] (bytes32)
+    1: codex.length (uint256)
+    .
+    .
+    .
+    keccak256(1): codex[0] (bytes32)
+    .
+    keccak256(1)+i: codex[i] (bytes32)
 */
 const uint256_range = web3.utils.toBN(2).pow(web3.utils.toBN(256)); // 2^256
 const codex_offset = web3.utils.toBN(web3.utils.soliditySha3(1)); // 1 is the storage slot of 'codex[]'
