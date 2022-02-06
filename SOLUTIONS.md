@@ -205,3 +205,8 @@ await contract.revise(storage0_relative_to_codex, storage0_new_content); // repl
 See [Difference between require and assert and the difference between revert and throw](https://ethereum.stackexchange.com/questions/15166/difference-between-require-and-assert-and-the-difference-between-revert-and-thro).  
 Compile [Deny.sol](./solutions/Deny.sol) and deploy it to the Rinkeby testnet with the level `instance` address as argument (constructor). Done!
 
+
+## 21. Shop
+
+Compile [Buyer.sol](./solutions/Buyer.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
+Afterwards, just call the `buy(address _shopContract)` function with the level `instance` address as first argument.
