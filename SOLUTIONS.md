@@ -311,7 +311,7 @@ await contract.setMaxBalance(player);
 In order to destroy the `Engine` contract via a `delegatecall` to a function that contains `selfdestruct`, we need to become the `upgrader` first to be allowed to call `upgradeToAndCall`.
 Becoming the `upgrader` is only possible by calling `initialize`. Unfortunately, the `Engine` contract is already initialized in the (storage) context of the `Motorbike` proxy contract.
 But it turns out that the `Engine` contract is not initialized in its own (storage) context.
-Therefore, we just need to find out the contract address and call `initialize` to make out attack work.
+Therefore, we just need to find out the contract address and call `initialize` to make our attack work.
 
 
 Web3 code to get implementation address from proxy contract:
